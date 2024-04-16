@@ -26,7 +26,7 @@ func PrintOne(chin chan int, chout chan int, number int, wg *sync.WaitGroup) {
 		fmt.Println(number)
 		chout <- 0
 	}
-	//最后要把channel资源释放
+	//在第一个协程内最后要把ch1取出，否则第三个协程写入了ch1，没有地方取出造成死锁。
 	if number == 1 {
 		<-chin
 	}
