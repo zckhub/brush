@@ -6,8 +6,11 @@ import (
 )
 
 func main() {
-	nums := []int{-1, 0, 1, 2, -1, -4}
-	res := threeSum(nums)
+	nums := []int{-1, 0, 1, 2, -1, -4, 0, 1}
+	sort.Slice(nums, func(i, j int) bool {
+		return nums[i] < nums[j]
+	})
+	res := ThreeSum(nums)
 	fmt.Println("res", res)
 }
 
@@ -53,9 +56,40 @@ func twoSum1(left int, nums []int) [][]int {
 	}
 	return res
 }
+func ThreeSum(nums []int) (res [][]int) {
+	for start := 0; start < len(nums)-2; start++ {
+		if start >= 1 && nums[start] == nums[start-1] {
+			continue
+		}
+		fmt.Println("start", start, "-nums[start]", -nums[start])
+		resTwoSum := TwoSum(-nums[start], start+1, nums)
+		if len(resTwoSum) > 0 {
+			res = append(res, resTwoSum...)
+		}
+	}
+	return
+}
+
+func TwoSum(target int, start int, nums []int) (res [][]int) {
+	right := len(nums) - 1
+	for left := start; left < len(nums)-1; left++ {
+		if left >= 1 && nums[left] == nums[left-1] {
+			continue
+		}
+		for right > left && nums[left]+nums[right] > target {
+			right--
+		}
+
+		if nums[left]+nums[right] == target {
+			res = append(res, []int{-target, nums[left], nums[right]})
+		}
+
+	}
+	return
+}
 
 //两数之和+双指针
-func threeSum(nums []int) [][]int {
+func threeSum2(nums []int) [][]int {
 	sort.Slice(nums, func(i, j int) bool {
 		return nums[i] < nums[j]
 	})
