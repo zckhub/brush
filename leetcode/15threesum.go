@@ -10,7 +10,8 @@ func main() {
 	sort.Slice(nums, func(i, j int) bool {
 		return nums[i] < nums[j]
 	})
-	res := ThreeSum(nums)
+	fmt.Println(nums)
+	res := threeSum(nums)
 	fmt.Println("res", res)
 }
 
@@ -51,36 +52,40 @@ func twoSum1(left int, nums []int) [][]int {
 				res = append(res, []int{left - 1, j, k})
 			}
 		}
-		fmt.Println("left", left, "j", j, "res", res)
+		//fmt.Println("left", left, "j", j, "res", res)
 
 	}
 	return res
 }
-func ThreeSum(nums []int) (res [][]int) {
+func threeSum(nums []int) [][]int {
+	sort.Slice(nums, func(i, j int) bool {
+		return nums[i] < nums[j]
+	})
+	res := make([][]int, 0)
 	for start := 0; start < len(nums)-2; start++ {
 		if start >= 1 && nums[start] == nums[start-1] {
 			continue
 		}
-		fmt.Println("start", start, "-nums[start]", -nums[start])
+		//fmt.Println("start", start, "-nums[start]", -nums[start])
 		resTwoSum := TwoSum(-nums[start], start+1, nums)
 		if len(resTwoSum) > 0 {
 			res = append(res, resTwoSum...)
 		}
 	}
-	return
+	return res
 }
 
 func TwoSum(target int, start int, nums []int) (res [][]int) {
 	right := len(nums) - 1
 	for left := start; left < len(nums)-1; left++ {
-		if left >= 1 && nums[left] == nums[left-1] {
+		if left > start && nums[left] == nums[left-1] {
 			continue
 		}
 		for right > left && nums[left]+nums[right] > target {
 			right--
 		}
 
-		if nums[left]+nums[right] == target {
+		if right > left && nums[left]+nums[right] == target {
 			res = append(res, []int{-target, nums[left], nums[right]})
 		}
 
