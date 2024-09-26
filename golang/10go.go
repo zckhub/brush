@@ -6,8 +6,9 @@ import (
 	"time"
 )
 
-//编写一个程序限制10个goroutine执行，每执行完一个goroutine就放一个新的goroutine进来
-
+/*编写一个程序限制10个goroutine执行，
+每执行完一个goroutine就放一个新的goroutine进来
+*/
 func main() {
 	ch := make(chan int, 10)
 	var wg sync.WaitGroup
