@@ -6,12 +6,14 @@ import (
 )
 
 func main() {
-	nums := []int{-1, 0, 1, 2, -1, -4, 0, 1}
+	//nums := []int{-1, 0, 1, 2, -1, -4, 0, 1}
+	nums := []int{-2, 0, 1, 1, 2}
+	//-4,-1,-1,0,0,1,1,2
 	sort.Slice(nums, func(i, j int) bool {
 		return nums[i] < nums[j]
 	})
 	fmt.Println(nums)
-	res := threeSum(nums)
+	res := GeneralThreeSum(0, nums)
 	fmt.Println("res", res)
 }
 
@@ -122,6 +124,50 @@ func threeSum2(nums []int) [][]int {
 					k--
 				}
 			}
+		}
+	}
+	return res
+}
+
+func GeneralTwoSum(target int, start int, nums []int) [][]int {
+	left := start
+	right := len(nums) - 1
+	var res [][]int
+	for left < right {
+		if nums[left]+nums[right] == target {
+			res = append(res, []int{nums[left], nums[right]})
+			left++
+			right--
+			for left < right && nums[left-1] == nums[left] {
+				left++
+			}
+			for left < right && nums[right+1] == nums[right] {
+				right--
+			}
+		}
+		for left < right && nums[left]+nums[right] < target {
+			left++
+		}
+		for left < right && nums[left]+nums[right] > target {
+			right--
+		}
+		//fmt.Println("left",left,"right",right,"t",target)
+	}
+	return res
+}
+
+func GeneralThreeSum(target int, nums []int) [][]int {
+	sort.Slice(nums, func(i, j int) bool {
+		return nums[i] < nums[j]
+	})
+	var res [][]int
+	for i := 0; i < len(nums)-2; i++ {
+		if i > 0 && nums[i-1] == nums[i] {
+			continue
+		}
+		twoResList := GeneralTwoSum(target-nums[i], i+1, nums)
+		for index := range twoResList {
+			res = append(res, append(twoResList[index], nums[i]))
 		}
 	}
 	return res
