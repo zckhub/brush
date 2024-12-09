@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-func main() {
+func main1() {
 	//启动3个goroutine 循环100次顺序打印123
 	ch1 := make(chan int)
 	ch2 := make(chan int)
@@ -30,4 +30,51 @@ func PrintOne(chin chan int, chout chan int, number int, wg *sync.WaitGroup) {
 	if number == 1 {
 		<-chin
 	}
+}
+
+func main3() {
+	ch1, ch2, ch3 := make(chan int), make(chan int), make(chan int)
+	wg := sync.WaitGroup{}
+	for i := 0; i < 100; i++ {
+		wg.Add(3)
+		go FmtGo(ch1, ch2, 1, &wg, i)
+		go FmtGo(ch2, ch3, 2, &wg, i)
+		go FmtGo(ch3, ch1, 3, &wg, i)
+	}
+	ch1 <- 1
+	<-ch1
+
+	wg.Wait()
+
+}
+func FmtGo(ch1 chan int, ch2 chan int, fmtNum int, group *sync.WaitGroup, i int) {
+	defer group.Done()
+	<-ch1
+	fmt.Println(fmtNum, "i=", i)
+	ch2 <- 1
+}
+
+func main() {
+	ch1, ch2, ch3 := make(chan int), make(chan int), make(chan int)
+	var wg sync.WaitGroup
+	wg.Add(3)
+	go printNum(ch1, ch2, 1, &wg)
+	go printNum(ch2, ch3, 2, &wg)
+	go printNum(ch3, ch1, 3, &wg)
+	ch1 <- 1
+	wg.Wait()
+	fmt.Println("end")
+}
+
+func printNum(ch1 chan int, ch2 chan int, num int, group *sync.WaitGroup) {
+	defer group.Done()
+	for i := 0; i < 100; i++ {
+		<-ch1
+		fmt.Println(num, "i=", i)
+		ch2 <- 1
+	}
+	if num == 1 {
+		<-ch1
+	}
+
 }
