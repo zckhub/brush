@@ -9,18 +9,37 @@ import (
 
 /*写代码实现两个 goroutine，其中一个产生随机数并写入到 go channel 中，
 另外一个从 channel 中读取数字并打印到标准输出。最终输出五个随机数。*/
+func main2() {
+	ch := make(chan int)
+	for i := 0; i < 5; i++ {
+		go Gen(ch)
+		go Fmt(ch)
+		time.Sleep(1 * time.Second)
+	}
+	//time.Sleep(2 * time.Second)
+}
 func main() {
 	ch := make(chan int)
-	var wg sync.WaitGroup
+	wg := sync.WaitGroup{}
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
 		go GenNum(ch, &wg)
 		wg.Add(1)
 		go FmtNum(ch, &wg)
 		time.Sleep(1 * time.Second)
-
 	}
+
 	wg.Wait()
+}
+func Gen(ch chan int) {
+	rand.Seed(time.Now().UnixMilli())
+	randInt := rand.Intn(101)
+	ch <- randInt
+}
+
+func Fmt(ch chan int) {
+	res := <-ch
+	fmt.Println("res", res)
 }
 
 func GenNum(ch chan int, wg *sync.WaitGroup) {
