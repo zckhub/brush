@@ -2,11 +2,6 @@ package main
 
 import "fmt"
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
-
 //两个无序链表合成一个有序链表
 func main() {
 	l1List := []int{3, 1, 4, 5}
