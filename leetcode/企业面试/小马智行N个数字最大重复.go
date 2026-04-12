@@ -11,6 +11,7 @@ func main() {
 	fmt.Println("数字:", num, " 最大重复次数:", cnt)
 }
 
+//快慢指针  nums代表最终的
 func maxRepeat(nums []int, k int) (int, int) {
 	sort.Ints(nums)
 	n := len(nums)
