@@ -2,6 +2,7 @@ package main
 
 import "sync"
 
+// 1111
 func PrintTwoGo() {
 	//str := "hello world"
 	//无缓冲 用户控制协程交替执行
