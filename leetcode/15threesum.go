@@ -95,32 +95,40 @@ func TwoSum(target int, start int, nums []int) (res [][]int) {
 	return
 }
 
-//两数之和+双指针
+//双指针 + 剪枝
 func threeSum2(nums []int) [][]int {
+	n := len(nums)
 	sort.Slice(nums, func(i, j int) bool {
 		return nums[i] < nums[j]
 	})
 	var res [][]int
-	for i := 0; i < len(nums)-2; i++ {
-		if i >= 1 && nums[i] == nums[i-1] {
+	for i := 0; i < n-2; i++ {
+		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		j := i + 1
-		k := len(nums) - 1
+		// 最小的三个数之和 > 0，后面不可能有解
+		if nums[i]+nums[i+1]+nums[i+2] > 0 {
+			break
+		}
+		// 当前数加上最大的两个数之和 < 0，当前数太小，跳过
+		if nums[i]+nums[n-2]+nums[n-1] < 0 {
+			continue
+		}
+		j, k := i+1, n-1
 		for j < k {
-			if nums[i]+nums[j]+nums[k] > 0 {
+			s := nums[i] + nums[j] + nums[k]
+			if s > 0 {
 				k--
-			} else if nums[i]+nums[j]+nums[k] < 0 {
+			} else if s < 0 {
 				j++
-			} else if nums[i]+nums[j]+nums[k] == 0 {
+			} else {
 				res = append(res, []int{nums[i], nums[j], nums[k]})
 				j++
-				//避免重复
 				for j < k && nums[j] == nums[j-1] {
 					j++
 				}
 				k--
-				for k > j && nums[k] == nums[k+1] {
+				for j < k && nums[k] == nums[k+1] {
 					k--
 				}
 			}
