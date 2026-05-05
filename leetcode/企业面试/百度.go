@@ -1,4 +1,6 @@
 package main
+//testttt
+// 滑动窗口最大值问题
 
 import "fmt"
 //长度为3的窗口从左到右滑过列表，返回每次窗口中的最大值
